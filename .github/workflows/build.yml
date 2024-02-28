@@ -92,10 +92,11 @@ jobs:
         name: Run all tests ${{ inputs.runall_params }}
 
       - name: "Test summary"
+        if: ${{ ! inputs.skip_test }}
         run: "grep -r '===.* in ' `find . -path '*build/out*txt'`| sed -e 's/===*//g' "
 
       - name: dump logs
-        if: ${{ inputs.dump_logs }}
+        if: ${{ ! inputs.skip_test && inputs.dump_logs }}
         run: for d in build/*/*.log; do echo === $d:; cat $d | perl -pe 's/(?:runbundler-)?(\S+?)(?:-1)?[\s|]+(\S+)/$2 $1 /' | sort ; done
 
       - name: Clone and update the gh-pages branch
